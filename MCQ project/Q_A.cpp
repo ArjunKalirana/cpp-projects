@@ -96,8 +96,9 @@ class Quiz{
         };
         void startQuiz(){
             cin.ignore();
-            cout << "Enter your name";
+            cout << YELLOW<<"👤Enter your name: ";
             getline(cin,username);
+            cout<< GREEN <<"\n Welcome,"<<BOLD<<username<<RESET<<GREEN<<"!Let's begin the quiz...\n"<<RESET;
 
             unsigned seed = chrono::system_clock::now().time_since_epoch().count();
             shuffle(questions.begin(),questions.end(),default_random_engine(seed));
@@ -152,7 +153,16 @@ class Quiz{
             }
             
                 displayFinalScore();  
-                saveScore();     
+                saveScore(); 
+                if (score >= questions.size() * 0.9) {
+                    cout << "\n🥇 Congratulations! You've earned the Gold Badge!\n";
+                } else if (score >= questions.size() * 0.7) {
+                    cout << "\n🥈 Congratulations! You've earned the Silver Badge!\n";
+                } else if (score >= questions.size() * 0.5) {
+                    cout << "\n🥉 Congratulations! You've earned the Bronze Badge!\n";
+                } else {
+                    cout << "\nTry again to earn a badge! 💪\n";
+                }    
         };
         void displayFinalScore() {
             cout << YELLOW << "\n Your final score is: " << score << " out of " << questions.size() << RESET <<endl;
@@ -162,9 +172,13 @@ class Quiz{
             if(file.is_open()){
                 time_t now = time(0);
                 char* dt = ctime(&now); 
+                string timestamp =dt;
+                if(!timestamp.empty() && timestamp.back()== '\n'){
+                    timestamp.pop_back();
+                }
 
-                file << "Name: " << username << ", Score: " << score << "/" << questions.size()
-                        << ", Time: " << dt;
+                file <<  username << "," << score << "/" << questions.size()
+                        << "," << timestamp << endl;
                 file.close();
             }
             else{
@@ -175,12 +189,37 @@ class Quiz{
         void displayScoreboard(){
             ifstream infile("score.txt");
             string line;
+            vector<pair<int,string>> scores;
             cout << "n=== Scoreboard ===\n";
             if(infile.is_open()){
                 while(getline(infile,line)){
-                    cout << line <<endl;
+                    try{
+                    stringstream ss(line);
+                    string username,scoreStr,timestamp;
+                    
+                    getline(ss,username,',');
+                    getline(ss,scoreStr,',');
+
+                    size_t slashPos =scoreStr.find('/');
+                    if(slashPos ==string::npos){
+                        continue;
+                    }
+                    int score=stoi(scoreStr.substr(0,slashPos));
+                    scores.push_back(make_pair(score,username));
                 }
+                catch(const std:: exception &e){
+                    continue;
+                }
+                }
+
                 infile.close();
+
+                sort(scores.begin(),scores.end(),greater<pair<int,string>>());
+                int rank=1;
+                for(const auto& score:scores){
+                    cout<<"Rank"<<rank++ << ": "<<score.second<<" - " << score.first <<"/"<<questions.size() << endl;
+
+                }
             }
             else{
                 cout << "No scores available yet.\n";
@@ -190,11 +229,11 @@ class Quiz{
         void showMenu(){
             int choice;
             do{
-                cout << "\n==== Quiz Menu ====\n";
-                cout <<"1. Start Quiz\n";
-                cout << "2. View Scoreboard\n";
-                cout << "3. Exit \n" ;
-                cout << "Enter your choice: ";
+                cout << BOLD<<CYAN<<"\n==== Quiz Menu ====\n"<<RESET;
+                cout <<GREEN<<" 1️⃣  Start Quiz\n"<<RESET;
+                cout << " 2️⃣  View Leaderboard\n";
+                cout << " 3️⃣  Exit \n" ;
+                cout << YELLOW<<"Enter your choice: "<<RESET;
                 cin>> choice;
                 cin.ignore();
 
@@ -203,7 +242,9 @@ class Quiz{
                 } else if (choice == 2) {
                     displayScoreboard();
                 } else if (choice == 3) {
-                    cout << "Thanks for playing! Goodbye.\n";
+                    cout << CYAN<<"Thanks for playing! Goodbye.👋\n"<<RESET;
+                }else {
+                    cout << RED << "Invalid choice! Please select 1, 2, or 3.\n" << RESET;
                 }
 
             }while (choice != 3);
@@ -213,6 +254,7 @@ class Quiz{
 };
 
 int main() {
+    SetConsoleOutputCP(CP_UTF8);
     enableColors();
     Quiz quiz;
     quiz.showMenu();

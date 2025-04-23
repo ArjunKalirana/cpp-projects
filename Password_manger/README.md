@@ -31,41 +31,8 @@ A simple, secure, and beginner-friendly password manager built in **C++**, using
 - A compiler (like `g++` or MSVC)
 - Windows OS (uses `windows.h` for output encoding)
 
-
-##🔐 Master Password Setup
-On first run, you'll be asked to set a master password.
-
-It will be saved (hashed) in master.hash.
-
-On future runs, this password will be required for access.
-
-##🧠 How It Works
-Your passwords are stored in password.txt after being XOR-encrypted using the master password.
-
-The master password is hashed and compared every time you start the app.
-
-The saved credentials are decrypted on load.
-
-##❗️Note
+**##❗️Note**
 A Python-based GUI frontend is currently under development, but is not yet integrated. The current version runs solely in the console.
-
-##🛡️ Disclaimer
-This is an educational project and should not be used for storing real passwords. XOR encryption and simple hash functions are not secure for production.
-
-##✨ Future Improvements
-Integrate a Tkinter-based GUI (currently under development).
-
-Use secure encryption like AES.
-
-Cross-platform support.
-
-Search/filter services.
-
-
-##📄 License
-This project is open-source and free to use under the MIT License.
-
-Would you like me to generate a version with Markdown styling preview (like emojis, colored titles,
 
 ### 🧪 Compile and Run
 

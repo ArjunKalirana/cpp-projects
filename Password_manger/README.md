@@ -31,12 +31,6 @@ A simple, secure, and beginner-friendly password manager built in **C++**, using
 - A compiler (like `g++` or MSVC)
 - Windows OS (uses `windows.h` for output encoding)
 
-### 🧪 Compile and Run
-
-```bash
-g++ main.cpp -o password_manager
-./password_manager
----
 
 ##🔐 Master Password Setup
 On first run, you'll be asked to set a master password.
@@ -67,7 +61,15 @@ Cross-platform support.
 
 Search/filter services.
 
+
 ##📄 License
 This project is open-source and free to use under the MIT License.
 
 Would you like me to generate a version with Markdown styling preview (like emojis, colored titles,
+
+### 🧪 Compile and Run
+
+```bash
+g++ main.cpp -o password_manager
+./password_manager
+---

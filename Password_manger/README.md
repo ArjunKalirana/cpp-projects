@@ -36,7 +36,7 @@ A simple, secure, and beginner-friendly password manager built in **C++**, using
 ```bash
 g++ main.cpp -o password_manager
 ./password_manager
-
+---
 
 ###🔐 Master Password Setup
 On first run, you'll be asked to set a master password.

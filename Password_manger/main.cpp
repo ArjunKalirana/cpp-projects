@@ -7,24 +7,34 @@ using namespace std;
 
 map<string,pair<string,string>> passwordDB;
 
+string generatePassword(int length);
+void copyToClipboard(const string &text);
+
 void showMenu(){
     cout << "\n===== Password Manager =====\n";
     cout << "1️⃣  Add new password\n";
     cout << "2️⃣  View all passwords\n";
-    cout << "3️⃣  Exit\n";
+    cout << "3️⃣  Search password by service\n";
+    cout << "4️⃣  Delete a password\n";
+    cout << "5️⃣  Export decrypted passwords\n";
+    cout << "6️⃣  Exit\n";
+    cout << "7️⃣  Generate strong password\n";
+
+
+
     cout << "Enter your choice: ";
 }
 
 
 void viewPasswords(){
     if(passwordDB.empty()){
-        cout<< "No passwords saved yet.\n";
+        cout<< "⚠️ No passwords saved yet.\n";
         return ;
     }
 
-    cout << "\nSaved Passwords:\n";
+    cout << "\n 🟢 Saved Passwords:\n";
     for(auto &entry:passwordDB){
-        cout<< "Service: " << entry.first
+        cout<< " Service: " << entry.first
             << ", Username: " <<entry.second.first
             << ", Password: " << entry.second.second <<endl;
     }
@@ -56,12 +66,37 @@ void addPassword(){
     cin >> service;
     cout<< "Enter username: ";
     cin>> username;
-    cout << "Enter password: ";
-    cin >> password;
+    
+
+    char choice;
+    cout << "Generate strong password automatically? (y/n): ";
+    cin >> choice;
+
+    if(choice == 'y'|| choice == 'Y'){
+        int length;
+        cout<< "Enter desired password length: ";
+        cin >> length;
+        password = generatePassword(length);
+        cout<< " Generated password: "<<password << "\n";
+
+        char cpy;
+        cout <<"Copy password to clipboard?(y/n): ";
+        cin>>cpy;
+        if(cpy=='y'|| cpy=='Y'){
+            copyToClipboard(password);
+        }
+
+    }
+    else{
+        cout << "Enter password: ";
+        cin >> password;
+    }
+
+    
 
     passwordDB[service] =make_pair(username,password);
     saveToFile();
-    cout<< "Password added for service:" << service <<endl;
+    cout<< "✅ Password added for service:" << service <<endl;
 }
 
 void loadFromFile(){
@@ -117,6 +152,77 @@ string getMasterPassword(){
     }
 }
 
+void searchPassword(){
+    string service;
+    cout << "Enter service name to search: ";
+    cin >> service;
+    auto it =passwordDB.find(service);
+    if(it!=passwordDB.end()){
+        cout << "✅ Found!\n";
+        cout << "Username: " <<it->second.first << "\n Password: " << it->second.second <<endl;
+
+    }
+    else{
+        cout <<"⚠️ No entry found for service: " <<service <<endl;
+    }
+}
+
+void deletePassword(){
+    string service;
+    cout << "Enter service name to delete: ";
+    cin>> service;
+    if(passwordDB.erase(service)){
+        saveToFile();
+        cout<< "🗑️ Password entry for " << service << " deleted.\n";
+    }
+    else{
+        cout << "❌ No such service found.\n";
+    }
+}
+void exportDecryptedPasswords(){
+    ofstream out("decrypted_passwords.txt");
+    for(const auto &entry : passwordDB){
+        out << "Service: " << entry.first
+            << ", Username: " << entry.second.first
+            << ", Password: " << entry.second.second << "\n";
+    }
+    out.close();
+    cout << "✅ Decrypted passwords exported to 'decrpted_passwords.txt'\n";
+}
+
+string generatePassword(int length){
+    const string chars=
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz"
+        "0123456789"
+        "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<> dist(0,chars.size()-1);
+
+        string password = "";
+        for(int i=0;i<length;++i){
+            password+=chars[dist(gen)];
+        }
+        return password;
+}
+
+void copyToClipboard(const string &text){
+    const size_t len =text.length() + 1;
+    HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE,len);
+    memcpy(GlobalLock(hMem),text.c_str(),len);
+    GlobalUnlock(hMem);
+    OpenClipboard(0);
+    EmptyClipboard();
+    SetClipboardData(CF_TEXT,hMem);
+    CloseClipboard();
+    cout<< "📋 Password copied to clipboard!\n";
+}
+
+
+
+
 int main(){
     string enteredMaster = getMasterPassword();
     if (!verifyMasterPassword(enteredMaster)) {
@@ -143,8 +249,34 @@ int main(){
                 viewPasswords();
                 break;
             case 3:
+                searchPassword();
+                break;
+            case 4:
+                deletePassword();
+                break;
+            case 5:
+                exportDecryptedPasswords();
+                break;
+            case 6:
                 cout << "Exiting...\n";
                 return 0;
+            case 7: {
+                int len;
+                cout << "Enter desired password length: ";
+                cin >> len;
+                string p = generatePassword(len);
+                cout << "🔐 Generated Password: " << p << "\n";
+                
+
+                char cpy;
+                cout <<"Copy password to clipboard? (y/n): ";
+                cin>>cpy;
+                if(cpy=='y'||cpy=='Y'){
+                    copyToClipboard(p);
+                }
+                break;
+            }
+
             default:
                 cout << "Invalid choice! Try again.\n";
 

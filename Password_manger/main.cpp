@@ -19,6 +19,7 @@ void showMenu(){
     cout << "5️⃣  Export decrypted passwords\n";
     cout << "6️⃣  Exit\n";
     cout << "7️⃣  Generate strong password\n";
+    cout << "8️⃣  Search password by username\n";
 
 
 
@@ -31,12 +32,20 @@ void viewPasswords(){
         cout<< "⚠️ No passwords saved yet.\n";
         return ;
     }
+    char choice;
+    cout<<"Show passwords in plain text?(y/n): ";
+    cin >> choice;
+    bool show = (choice =='y'||choice=='Y');
 
     cout << "\n 🟢 Saved Passwords:\n";
     for(auto &entry:passwordDB){
         cout<< " Service: " << entry.first
-            << ", Username: " <<entry.second.first
-            << ", Password: " << entry.second.second <<endl;
+            << ", Username: " <<entry.second.first;
+            if(show)
+                cout<<", Password: " << entry.second.second ;
+            else
+                cout<<", Password: ********";
+            cout << endl;
     }
 }
 
@@ -171,9 +180,19 @@ void deletePassword(){
     string service;
     cout << "Enter service name to delete: ";
     cin>> service;
-    if(passwordDB.erase(service)){
+
+    auto it = passwordDB.find(service);
+    if(it !=passwordDB.end()){
+        char confirm;
+        cout << "⚠️ Are you sure you want to delete the entry for " << service << "? (y/n): ";
+        cin >>confirm;
+        if(confirm=='y'|| confirm=='Y'){
+            passwordDB.erase(it);
         saveToFile();
-        cout<< "🗑️ Password entry for " << service << " deleted.\n";
+        cout<< "🗑️ Password entry for " << service << " deleted.\n";}
+        else{
+            cout << "❌ Deletion cancelled.\n";
+        }
     }
     else{
         cout << "❌ No such service found.\n";
@@ -218,6 +237,26 @@ void copyToClipboard(const string &text){
     SetClipboardData(CF_TEXT,hMem);
     CloseClipboard();
     cout<< "📋 Password copied to clipboard!\n";
+}
+
+void searchByUsername(){
+    string username;
+    cout << "Enter username to search: ";
+    cin >> username;
+    bool found= false;
+
+    for(const auto &entry : passwordDB){
+        if(entry.second.first == username){
+            cout << "✅ Found entry:\n";
+            cout << "Service: " << entry.first
+                 << ", Username: " << entry.second.first
+                 << ", Password: " << entry.second.second << "\n";
+            found = true;
+        }
+    }
+    if(!found){
+        cout<<"⚠️ No entries found for username: "<<username << "\n";
+    }
 }
 
 
@@ -276,6 +315,10 @@ int main(){
                 }
                 break;
             }
+            case 8:
+                searchByUsername();
+                break;
+
 
             default:
                 cout << "Invalid choice! Try again.\n";

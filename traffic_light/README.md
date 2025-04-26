@@ -1,97 +1,32 @@
-🚦 Traffic Light Simulation (C++)
-📋 Project Overview
-This project simulates a traffic light system using the console in C++. The simulation cycles through three basic traffic light states: Red, Yellow, and Green, with corresponding beeping sounds for each state. The system operates for a user-defined number of cycles.
+# Traffic Light Simulation in C++ 🚦
 
-The simulation includes:
+This project simulates a basic **Traffic Light System** using C++. The program demonstrates how traffic lights (Red, Yellow, and Green) function in sequence, and also plays corresponding musical notes for each light change using the `Beep()` function. This simulation is also a great example of how to use system commands to control the color of the terminal and use time delays for the traffic light cycle.
 
-Red Light: Beeps at a frequency of 523 Hz (C5 note) for 5 seconds.
+## Features ✨
+- **Red Light**: The red light signals for a "STOP", followed by a beep sound.
+- **Green Light**: The green light signals for "GO", accompanied by a beep.
+- **Yellow Light**: The yellow light signals "WAIT", with a beep sound.
+- **Countdown Timer**: Each light displays a countdown, giving a realistic traffic light effect.
 
-Yellow Light: Beeps at a frequency of 659 Hz (E5 note) for 3 seconds.
+## Prerequisites 🛠️
+- **Operating System**: Windows (since the `Beep()` function and `system("Color")` are specific to Windows).
+- **C++ Compiler**: Any C++ compiler that supports C++11 or higher.
 
-Green Light: Beeps at a frequency of 784 Hz (G5 note) for 4 seconds.
+## How to Run 🚀
+1. Clone or download the repository.
+2. Open the terminal or command prompt and navigate to the folder containing the `.cpp` file.
+3. Compile the program using a C++ compiler (e.g., `g++ traffic_light.cpp -o traffic_light`).
+4. Run the program (`./traffic_light` or `traffic_light.exe` on Windows).
 
-The project provides visual feedback in the terminal and plays different tones for each light, making it both informative and engaging.
+## Code Overview
 
-⚙️ Technologies Used
-C++ for core logic
+The traffic light simulation is implemented using the following functions:
+1. **redLight()**: This function simulates the red light by setting the console color to red (system("Color 0C")), displaying a countdown, and playing a 523 Hz sound (C5 note) using the Beep() function.
+2. **yellowLight()**: This function simulates the yellow light by changing the console color to yellow (system("Color 0E")), displaying a countdown, and playing a 659 Hz sound (E5 note).
+3. **greenLight()**: This function simulates the green light by changing the console color to green (system("Color 0A")), displaying a countdown, and playing a 784 Hz sound (G5 note).
 
-Windows.h for Beep() and console color manipulation
+The main() function loops through the traffic light cycle a number of times (set to 3 cycles by default).
 
-Console for text output and visual feedback
-
-💻 How to Run the Project
-Prerequisites:
-A system running Windows (since windows.h is used for color manipulation and beeping functionality).
-
-C++ Compiler (e.g., GCC or MSVC).
-
-Steps:
-Clone/Download the Repository:
-
-If you haven't already, clone or download the project to your local machine.
-
-Compile the Program:
-
-Open a terminal/command prompt in the project directory.
-
-Run the following command to compile the project:
-
-Copy
-Edit
-g++ -o traffic_light_simulation traffic_light_simulation.cpp
-Run the Program:
-
-After compilation, execute the program by running the command:
-
-bash
-Copy
-Edit
-./traffic_light_simulation
-Observe the Traffic Light Simulation:
-
-The simulation will run for 3 cycles by default, displaying the current state of the traffic light and playing corresponding beeping sounds.
-
-The colors of the console will change based on the light's state, and the remaining time for each light is shown in seconds.
-
-🛠 Features
-Red Light (STOP): Beep at 523 Hz (C5), lasts for 5 seconds.
-
-Yellow Light (WAIT): Beep at 659 Hz (E5), lasts for 3 seconds.
-
-Green Light (GO): Beep at 784 Hz (G5), lasts for 4 seconds.
-
-Console Color Changing: The background color changes to represent the active traffic light color:
-
-Red: Red color.
-
-Yellow: Yellow color.
-
-Green: Green color.
-
-🚀 Enhancements for Future
-Variable Cycles: Allow users to input the number of cycles for the simulation.
-
-Customizable Timings: Let users adjust the time duration for each light.
-
-Real-Time Simulation: Integrate with actual traffic light systems using sensors or real-time data.
-
-Web or GUI Version: Create a web-based or graphical interface version of the traffic light system for better visualization.
-
-📄 Source Code Explanation
-Functions:
-redLight(): Simulates the red light (STOP) phase, plays a 523 Hz beep for 5 seconds.
-
-greenLight(): Simulates the green light (GO) phase, plays a 784 Hz beep for 4 seconds.
-
-yellowLight(): Simulates the yellow light (WAIT) phase, plays a 659 Hz beep for 3 seconds.
-
-Main Logic:
-The program runs for a defined number of cycles (cycles = 3 by default).
-
-For each cycle, the sequence of Red → Yellow → Green is executed, with corresponding beeps and time remaining displayed in the console.
-
-🤝 Contributing
-If you have any suggestions, improvements, or bug fixes, feel free to open an Issue or create a Pull Request. Contributions are welcome!
-
-📄 License
-This project is open source and available under the MIT License.
+```bash
+g++ traffic_light.cpp -o traffic_light
+./traffic_light
